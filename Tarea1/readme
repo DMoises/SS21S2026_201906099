@@ -1,24 +1,65 @@
-# Tarea 1: Limpieza y Análisis de Datos
+# Tarea 1: Limpieza y Análisis de Datos (SS2)
+**Carnet:** 201906099
+**Nombre:** Daniel Moisés Chan Pelico
+**Curso:** Seminario de Sistemas 2
 
-## [cite_start]1. Descripción del Dataset [cite: 42]
-**Nombre:** [Nombre del dataset de Kaggle]
-**Origen:** [Link a Kaggle]
-**Descripción:** Este dataset contiene información sobre...
+## 1. Descripción del Dataset
+Se utilizó un dataset de transacciones de clientes (`dataset_sucio.csv`) que simulaba errores comunes en sistemas reales.
+* **Problemas detectados:**
+    * **Fechas:** Formatos mixtos (`YYYY-MM-DD` y `DD/MM/YYYY`) y valores nulos.
+    * **Montos:** La columna `gasto_q` venía como texto con caracteres sucios (comillas `"` y comas decimales `,` en lugar de puntos).
+    * **Texto:** Nombres y ciudades con espacios innecesarios y capitalización inconsistente (ej: `"  guatemala"` vs `"Guatemala"`).
+    * **Nulos:** Existencia de campos vacíos en categorías críticas.
 
-## [cite_start]2. Proceso de Limpieza [cite: 43]
-Se realizó el siguiente proceso utilizando Python y Pandas:
+## 2. Proceso de Limpieza
+Se ejecutó un script en Python (`cleaning_script.py`) utilizando la librería **Pandas** con los siguientes pasos:
 
-1.  **Eliminación de duplicados:** Se identificaron y eliminaron X registros.
-2.  **Manejo de nulos:** Se imputaron los valores faltantes en la columna Y utilizando...
-3.  **Estandarización:** Se convirtieron las fechas a formato ISO y se normalizaron los textos a minúsculas.
+1.  **Normalización de Gasto:** Se eliminaron comillas y se estandarizó el separador decimal para convertir la columna a tipo numérico (`float`).
+2.  **Conversión de Fechas:** Se unificaron los formatos de fecha a `datetime`. Los valores incoherentes se marcaron como `NaT` y posteriormente se etiquetaron como "Desconocido".
+3.  **Estandarización de Texto:** Se aplicaron funciones de string (`.strip().title()`) para limpiar espacios y corregir mayúsculas en Nombres, Ciudades y Categorías.
+4.  **Manejo de Nulos:**
+    * Los gastos vacíos se imputaron con la **media** de la columna (aprox. Q251.28).
+    * Los datos faltantes en texto se etiquetaron como "Nan" o "Desconocido" para no perder el registro.
 
-## [cite_start]3. Resultados y Visualizaciones [cite: 44]
+## 3. Resultados y Visualizaciones
 
-### Tabla Original (Muestra)
-*(Aquí pegas una captura de pantalla del df.head() original)*
+### Tabla Original (Ejemplo de Suciedad)
+*Datos con formatos erróneos y nulos.*
+```text
+id_cliente      nombre genero fecha_registro   gasto_q          ciudad
+    502609  Paola Morales     m      2026-02-27       NaN         Antigua
+    502408     Maria Paz      m     2026-01-15  "373,33"  quetzaltenango
 
-### Tabla Limpia (Muestra)
-*(Aquí pegas una captura del df.head() final)*
+```
 
-## [cite_start]4. Conclusiones [cite: 45]
-El proceso de limpieza mejoró la calidad de los datos al eliminar redundancia (duplicados) y permitir el análisis temporal correcto al corregir los formatos de fecha...
+### Tabla Depurada (Clean Data)
+
+*Datos estandarizados y listos para análisis.*
+
+```text
+id_cliente         nombre genero     fecha_registro     gasto_q          ciudad
+    502609  Paola Morales      M         2026-02-27  251.276705         Antigua
+    502408      Maria Paz      M         2026-01-15  373.330000  Quetzaltenango
+
+```
+
+### Análisis Exploratorio (Gasto por Ciudad)
+
+Gracias a la limpieza, fue posible agrupar los datos y calcular el gasto promedio.
+
+| Ciudad | Gasto Promedio (Q) |
+| --- | --- |
+| Amatitlan | 244.02 |
+| Antigua | 245.23 |
+| Chimaltenango | 263.18 |
+| Escuintla | 267.30 |
+| Guatemala | 241.05 |
+| Mixco | 250.56 |
+| Quetzaltenango | 258.26 |
+| Villa Nueva | 244.28 |
+
+## 4. Conclusiones
+
+* Se logró recuperar información valiosa de filas que originalmente tenían formatos inválidos en el campo de `gasto_q`.
+* La estandarización de ciudades evitó la fragmentación de la información (ej. unificar "mixco" y "Mixco"), permitiendo un análisis geográfico preciso.
+* Se identificaron transacciones sin ciudad asignada (etiquetadas como 'Nan'), lo cual alerta sobre la necesidad de mejorar la captura de datos en el origen.
