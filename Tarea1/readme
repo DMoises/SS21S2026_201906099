@@ -1,0 +1,24 @@
+# Tarea 1: Limpieza y Análisis de Datos
+
+## [cite_start]1. Descripción del Dataset [cite: 42]
+**Nombre:** [Nombre del dataset de Kaggle]
+**Origen:** [Link a Kaggle]
+**Descripción:** Este dataset contiene información sobre...
+
+## [cite_start]2. Proceso de Limpieza [cite: 43]
+Se realizó el siguiente proceso utilizando Python y Pandas:
+
+1.  **Eliminación de duplicados:** Se identificaron y eliminaron X registros.
+2.  **Manejo de nulos:** Se imputaron los valores faltantes en la columna Y utilizando...
+3.  **Estandarización:** Se convirtieron las fechas a formato ISO y se normalizaron los textos a minúsculas.
+
+## [cite_start]3. Resultados y Visualizaciones [cite: 44]
+
+### Tabla Original (Muestra)
+*(Aquí pegas una captura de pantalla del df.head() original)*
+
+### Tabla Limpia (Muestra)
+*(Aquí pegas una captura del df.head() final)*
+
+## [cite_start]4. Conclusiones [cite: 45]
+El proceso de limpieza mejoró la calidad de los datos al eliminar redundancia (duplicados) y permitir el análisis temporal correcto al corregir los formatos de fecha...
