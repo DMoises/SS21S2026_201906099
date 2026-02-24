@@ -18,6 +18,16 @@ def extraer_y_limpiar_datos(ruta_archivo):
         df['origin_airport'] = df['origin_airport'].astype(str).str.upper()
         df['passenger_gender'] = df['passenger_gender'].astype(str).str.upper()
         
+        # Homologación de géneros
+        print(" -> Homologando categorías de género...")
+        mapeo_genero = {
+            'M': 'MASCULINO',
+            'F': 'FEMENINO',
+            'X': 'NO BINARIO',
+            'NOBINARIO': 'NO BINARIO'
+        }
+        df['passenger_gender'] = df['passenger_gender'].replace(mapeo_genero)
+        
         # b. Limpieza de números (Arreglando precios con comas ej: "77,60" -> 77.60)
         print(" -> Limpiando formatos numéricos...")
         # Reemplazar coma por punto y convertir a float numérico
