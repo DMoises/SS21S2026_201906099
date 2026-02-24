@@ -107,7 +107,109 @@ try:
         right_on='Codigo_Aerolinea', 
         how='left'
     )
-    print("✅ Dim_Aerolinea cargada y conectada en el dataset principal.")
+    print("✅ Dim_Aerolinea cargada y conectada en el dataset principal.")  
+
+    # ==========================================
+    # CARGA DEL RESTO DE DIMENSIONES
+    # ==========================================
+    
+    # 1. Dim_Pasajero
+    print(" -> Cargando Dim_Pasajero...")
+    df_pasajero = df_limpio[['passenger_id', 'passenger_gender', 'passenger_age', 'passenger_nationality']].drop_duplicates()
+    df_pasajero.rename(columns={'passenger_id': 'Pasajero_ID_Original', 'passenger_gender': 'Genero', 'passenger_age': 'Edad', 'passenger_nationality': 'Nacionalidad'}, inplace=True)
+    df_pasajero.to_sql('Dim_Pasajero', engine, if_exists='append', index=False)
+    
+    df_pasajero_db = pd.read_sql_query("SELECT ID_Pasajero, Pasajero_ID_Original FROM Dim_Pasajero", engine)
+    df_limpio = df_limpio.merge(df_pasajero_db, left_on='passenger_id', right_on='Pasajero_ID_Original', how='left')
+
+    # 2. Dim_Aeropuerto (El truco del Origen y Destino)
+    print(" -> Cargando Dim_Aeropuerto...")
+    # Unimos origen y destino para tener todos los aeropuertos únicos
+    aeropuertos_unicos = pd.concat([df_limpio['origin_airport'], df_limpio['destination_airport']]).unique()
+    df_aeropuerto = pd.DataFrame({'Codigo_Aeropuerto': aeropuertos_unicos})
+    df_aeropuerto.to_sql('Dim_Aeropuerto', engine, if_exists='append', index=False)
+    
+    df_aeropuerto_db = pd.read_sql_query("SELECT ID_Aeropuerto, Codigo_Aeropuerto FROM Dim_Aeropuerto", engine)
+    
+    # Merge para el Origen
+    df_limpio = df_limpio.merge(df_aeropuerto_db, left_on='origin_airport', right_on='Codigo_Aeropuerto', how='left')
+    df_limpio.rename(columns={'ID_Aeropuerto': 'ID_Aeropuerto_Origen'}, inplace=True)
+    
+    # Merge para el Destino
+    df_limpio = df_limpio.merge(df_aeropuerto_db, left_on='destination_airport', right_on='Codigo_Aeropuerto', how='left')
+    df_limpio.rename(columns={'ID_Aeropuerto': 'ID_Aeropuerto_Destino'}, inplace=True)
+
+    # 3. Dim_Aeronave
+    print(" -> Cargando Dim_Aeronave...")
+    df_aeronave = df_limpio[['aircraft_type']].drop_duplicates().rename(columns={'aircraft_type': 'Tipo_Aeronave'})
+    df_aeronave.to_sql('Dim_Aeronave', engine, if_exists='append', index=False)
+    df_aeronave_db = pd.read_sql_query("SELECT ID_Aeronave, Tipo_Aeronave FROM Dim_Aeronave", engine)
+    df_limpio = df_limpio.merge(df_aeronave_db, left_on='aircraft_type', right_on='Tipo_Aeronave', how='left')
+
+    # 4. Dim_Detalle_Boleto
+    print(" -> Cargando Dim_Detalle_Boleto...")
+    df_boleto = df_limpio[['cabin_class', 'sales_channel', 'payment_method']].drop_duplicates()
+    df_boleto.rename(columns={'cabin_class': 'Clase_Cabina', 'sales_channel': 'Canal_Venta', 'payment_method': 'Metodo_Pago'}, inplace=True)
+    df_boleto.to_sql('Dim_Detalle_Boleto', engine, if_exists='append', index=False)
+    
+    # Aquí unimos por las 3 columnas para garantizar que traemos el ID correcto de esa combinación
+    df_boleto_db = pd.read_sql_query("SELECT * FROM Dim_Detalle_Boleto", engine)
+    df_limpio = df_limpio.merge(df_boleto_db, left_on=['cabin_class', 'sales_channel', 'payment_method'], right_on=['Clase_Cabina', 'Canal_Venta', 'Metodo_Pago'], how='left')
+
+    # 5. Dim_Status
+    print(" -> Cargando Dim_Status...")
+    df_status = df_limpio[['status']].drop_duplicates().rename(columns={'status': 'Estado_Vuelo'})
+    df_status.to_sql('Dim_Status', engine, if_exists='append', index=False)
+    df_status_db = pd.read_sql_query("SELECT ID_Status, Estado_Vuelo FROM Dim_Status", engine)
+    df_limpio = df_limpio.merge(df_status_db, left_on='status', right_on='Estado_Vuelo', how='left')
+
+    # 6. Dim_Tiempo (Generando el ID_Tiempo como número entero YYYYMMDD)
+    print(" -> Cargando Dim_Tiempo...")
+    df_tiempo = pd.DataFrame()
+    df_tiempo['Fecha'] = df_limpio['departure_datetime'].dt.date.drop_duplicates()
+    df_tiempo['Fecha'] = pd.to_datetime(df_tiempo['Fecha']) # Aseguramos formato fecha
+    df_tiempo['ID_Tiempo'] = df_tiempo['Fecha'].dt.strftime('%Y%m%d').astype(int) # Ej: 20240120
+    df_tiempo['Anio'] = df_tiempo['Fecha'].dt.year
+    df_tiempo['Mes'] = df_tiempo['Fecha'].dt.month
+    df_tiempo['Nombre_Mes'] = df_tiempo['Fecha'].dt.month_name()
+    df_tiempo['Dia'] = df_tiempo['Fecha'].dt.day
+    df_tiempo['Trimestre'] = df_tiempo['Fecha'].dt.quarter
+    df_tiempo['Dia_Semana'] = df_tiempo['Fecha'].dt.day_name()
+    
+    df_tiempo.to_sql('Dim_Tiempo', engine, if_exists='append', index=False)
+    
+    # Creamos la misma columna ID_Tiempo temporal en df_limpio para hacer el merge fácilmente
+    df_limpio['ID_Tiempo_Temp'] = df_limpio['departure_datetime'].dt.strftime('%Y%m%d').astype(int)
+    # En este caso no leemos de la base de datos porque nosotros mismos creamos el ID (no es Identity autoincremental)
+    df_limpio['ID_Tiempo_Salida'] = df_limpio['ID_Tiempo_Temp']
+
+    # ==========================================
+    # CARGA DE LA TABLA DE HECHOS (FACT_VUELOS)
+    # ==========================================
+    print("\n -> 🚀 Armado y Carga de Fact_Vuelos...")
+    
+    # Seleccionamos ÚNICAMENTE las llaves foráneas y las métricas numéricas
+    columnas_hechos = [
+        'record_id', 'ID_Tiempo_Salida', 'ID_Aerolinea', 'ID_Aeropuerto_Origen', 
+        'ID_Aeropuerto_Destino', 'ID_Pasajero', 'ID_Aeronave', 'ID_Detalle_Boleto', 'ID_Status',
+        'duration_min', 'delay_min', 'ticket_price_usd_est', 'bags_total', 'bags_checked'
+    ]
+    
+    df_hechos = df_limpio[columnas_hechos].copy()
+    
+    # Renombramos para que coincida exactamente con las columnas de SQL Server
+    df_hechos.rename(columns={
+        'record_id': 'Record_ID_Original',
+        'duration_min': 'Duracion_Minutos',
+        'delay_min': 'Retraso_Minutos',
+        'ticket_price_usd_est': 'Precio_Boleto_USD',
+        'bags_total': 'Equipaje_Total',
+        'bags_checked': 'Equipaje_Documentado'
+    }, inplace=True)
+    
+    # ¡LA CARGA FINAL!
+    df_hechos.to_sql('Fact_Vuelos', engine, if_exists='append', index=False)
+    print("✅ ¡Tabla de Hechos cargada exitosamente! ETL FINALIZADO CON ÉXITO 🏆")
 
 except Exception as e:
-    print(f"❌ Error en la base de datos: {e}")    
+    print(f"❌ Error en la base de datos: {e}")
