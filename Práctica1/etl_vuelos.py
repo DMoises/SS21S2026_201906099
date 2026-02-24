@@ -27,7 +27,7 @@ def extraer_y_limpiar_datos(ruta_archivo):
             'NOBINARIO': 'NO BINARIO'
         }
         df['passenger_gender'] = df['passenger_gender'].replace(mapeo_genero)
-        
+
         # b. Limpieza de números (Arreglando precios con comas ej: "77,60" -> 77.60)
         print(" -> Limpiando formatos numéricos...")
         # Reemplazar coma por punto y convertir a float numérico
@@ -76,7 +76,7 @@ from sqlalchemy import create_engine
 print("\nIniciando fase de Carga (L) a SQL Server...")
 
 # 1. Crear la conexión a SQL Server
-# Nota: TrustServerCertificate=yes es crucial en entornos locales de Docker
+# Nota se usó TrustServerCertificate=yes ya que la DB está en Docker
 params = urllib.parse.quote_plus(
     'DRIVER={ODBC Driver 18 for SQL Server};'
     'SERVER=localhost,1433;'
@@ -134,7 +134,7 @@ try:
 
     # 2. Dim_Aeropuerto (El truco del Origen y Destino)
     print(" -> Cargando Dim_Aeropuerto...")
-    # Unimos origen y destino para tener todos los aeropuertos únicos
+    # Unir origen y destino para tener todos los aeropuertos únicos
     aeropuertos_unicos = pd.concat([df_limpio['origin_airport'], df_limpio['destination_airport']]).unique()
     df_aeropuerto = pd.DataFrame({'Codigo_Aeropuerto': aeropuertos_unicos})
     df_aeropuerto.to_sql('Dim_Aeropuerto', engine, if_exists='append', index=False)
@@ -162,7 +162,7 @@ try:
     df_boleto.rename(columns={'cabin_class': 'Clase_Cabina', 'sales_channel': 'Canal_Venta', 'payment_method': 'Metodo_Pago'}, inplace=True)
     df_boleto.to_sql('Dim_Detalle_Boleto', engine, if_exists='append', index=False)
     
-    # Aquí unimos por las 3 columnas para garantizar que traemos el ID correcto de esa combinación
+    # Unir por las 3 columnas para garantizar que se trae el ID correcto de esa combinación
     df_boleto_db = pd.read_sql_query("SELECT * FROM Dim_Detalle_Boleto", engine)
     df_limpio = df_limpio.merge(df_boleto_db, left_on=['cabin_class', 'sales_channel', 'payment_method'], right_on=['Clase_Cabina', 'Canal_Venta', 'Metodo_Pago'], how='left')
 
@@ -190,7 +190,7 @@ try:
     
     # Creamos la misma columna ID_Tiempo temporal en df_limpio para hacer el merge fácilmente
     df_limpio['ID_Tiempo_Temp'] = df_limpio['departure_datetime'].dt.strftime('%Y%m%d').astype(int)
-    # En este caso no leemos de la base de datos porque nosotros mismos creamos el ID (no es Identity autoincremental)
+    # En este caso no leemos de la base de datos porque nosotros mismos creamos el ID
     df_limpio['ID_Tiempo_Salida'] = df_limpio['ID_Tiempo_Temp']
 
     # ==========================================
@@ -198,7 +198,7 @@ try:
     # ==========================================
     print("\n -> 🚀 Armado y Carga de Fact_Vuelos...")
     
-    # Seleccionamos ÚNICAMENTE las llaves foráneas y las métricas numéricas
+    # Seleccionar solo las llaves foráneas y las métricas numéricas
     columnas_hechos = [
         'record_id', 'ID_Tiempo_Salida', 'ID_Aerolinea', 'ID_Aeropuerto_Origen', 
         'ID_Aeropuerto_Destino', 'ID_Pasajero', 'ID_Aeronave', 'ID_Detalle_Boleto', 'ID_Status',
@@ -207,7 +207,7 @@ try:
     
     df_hechos = df_limpio[columnas_hechos].copy()
     
-    # Renombramos para que coincida exactamente con las columnas de SQL Server
+    # Renombrar para que coincida exactamente con las columnas de SQL Server
     df_hechos.rename(columns={
         'record_id': 'Record_ID_Original',
         'duration_min': 'Duracion_Minutos',
@@ -217,7 +217,6 @@ try:
         'bags_checked': 'Equipaje_Documentado'
     }, inplace=True)
     
-    # ¡LA CARGA FINAL!
     df_hechos.to_sql('Fact_Vuelos', engine, if_exists='append', index=False)
     print("✅ ¡Tabla de Hechos cargada exitosamente! ETL FINALIZADO CON ÉXITO 🏆")
 
