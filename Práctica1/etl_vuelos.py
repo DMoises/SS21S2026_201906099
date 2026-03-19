@@ -94,85 +94,60 @@ try:
     conexion.close()
     
     # ==========================================
-    # CARGA DE DIMENSIÓN AEROLÍNEA
+    # CARGA DE DIMENSIONES (Corregido contra duplicados)
     # ==========================================
     print(" -> Cargando Dim_Aerolinea...")
-    
-    # a. Extraer valores únicos del DataFrame limpio y renombrar columnas para que coincidan con SQL
-    df_dim_aerolinea = df_limpio[['airline_code', 'airline_name']].drop_duplicates().rename(columns={
+    df_dim_aerolinea = df_limpio[['airline_code', 'airline_name']].drop_duplicates(subset=['airline_code']).rename(columns={
         'airline_code': 'Codigo_Aerolinea',
         'airline_name': 'Nombre_Aerolinea'
     })
-    
-    # b. Insertar en SQL Server (index=False es importante, if_exists='append' agrega a la tabla existente)
     df_dim_aerolinea.to_sql('Dim_Aerolinea', engine, if_exists='append', index=False)
-    
-    # c. Leer la tabla de regreso para obtener las Llaves Subrogadas (IDs generados)
     df_aerolineas_db = pd.read_sql_query("SELECT ID_Aerolinea, Codigo_Aerolinea FROM Dim_Aerolinea", engine)
-    
-    # d. Hacer MERGE con el DataFrame principal para sustituir los textos por el nuevo ID
-    df_limpio = df_limpio.merge(
-        df_aerolineas_db, 
-        left_on='airline_code', 
-        right_on='Codigo_Aerolinea', 
-        how='left'
-    )
-    print("✅ Dim_Aerolinea cargada y conectada en el dataset principal.")  
+    df_limpio = df_limpio.merge(df_aerolineas_db, left_on='airline_code', right_on='Codigo_Aerolinea', how='left')
 
-    # ==========================================
-    # CARGA DEL RESTO DE DIMENSIONES
-    # ==========================================
-    
-    # 1. Dim_Pasajero
+    # 1. Dim_Pasajero (Garantizando que un ID de pasajero solo aparezca 1 vez aunque cambie su edad)
     print(" -> Cargando Dim_Pasajero...")
-    df_pasajero = df_limpio[['passenger_id', 'passenger_gender', 'passenger_age', 'passenger_nationality']].drop_duplicates()
+    df_pasajero = df_limpio[['passenger_id', 'passenger_gender', 'passenger_age', 'passenger_nationality']].drop_duplicates(subset=['passenger_id'])
     df_pasajero.rename(columns={'passenger_id': 'Pasajero_ID_Original', 'passenger_gender': 'Genero', 'passenger_age': 'Edad', 'passenger_nationality': 'Nacionalidad'}, inplace=True)
     df_pasajero.to_sql('Dim_Pasajero', engine, if_exists='append', index=False)
     
     df_pasajero_db = pd.read_sql_query("SELECT ID_Pasajero, Pasajero_ID_Original FROM Dim_Pasajero", engine)
     df_limpio = df_limpio.merge(df_pasajero_db, left_on='passenger_id', right_on='Pasajero_ID_Original', how='left')
 
-    # 2. Dim_Aeropuerto (El truco del Origen y Destino)
+    # 2. Dim_Aeropuerto
     print(" -> Cargando Dim_Aeropuerto...")
-    # Unir origen y destino para tener todos los aeropuertos únicos
     aeropuertos_unicos = pd.concat([df_limpio['origin_airport'], df_limpio['destination_airport']]).unique()
-    df_aeropuerto = pd.DataFrame({'Codigo_Aeropuerto': aeropuertos_unicos})
+    df_aeropuerto = pd.DataFrame({'Codigo_Aeropuerto': aeropuertos_unicos}).drop_duplicates()
     df_aeropuerto.to_sql('Dim_Aeropuerto', engine, if_exists='append', index=False)
     
     df_aeropuerto_db = pd.read_sql_query("SELECT ID_Aeropuerto, Codigo_Aeropuerto FROM Dim_Aeropuerto", engine)
-    
-    # Merge para el Origen
     df_limpio = df_limpio.merge(df_aeropuerto_db, left_on='origin_airport', right_on='Codigo_Aeropuerto', how='left')
     df_limpio.rename(columns={'ID_Aeropuerto': 'ID_Aeropuerto_Origen'}, inplace=True)
-    
-    # Merge para el Destino
     df_limpio = df_limpio.merge(df_aeropuerto_db, left_on='destination_airport', right_on='Codigo_Aeropuerto', how='left')
     df_limpio.rename(columns={'ID_Aeropuerto': 'ID_Aeropuerto_Destino'}, inplace=True)
 
     # 3. Dim_Aeronave
     print(" -> Cargando Dim_Aeronave...")
-    df_aeronave = df_limpio[['aircraft_type']].drop_duplicates().rename(columns={'aircraft_type': 'Tipo_Aeronave'})
+    df_aeronave = df_limpio[['aircraft_type']].drop_duplicates(subset=['aircraft_type']).rename(columns={'aircraft_type': 'Tipo_Aeronave'})
     df_aeronave.to_sql('Dim_Aeronave', engine, if_exists='append', index=False)
     df_aeronave_db = pd.read_sql_query("SELECT ID_Aeronave, Tipo_Aeronave FROM Dim_Aeronave", engine)
     df_limpio = df_limpio.merge(df_aeronave_db, left_on='aircraft_type', right_on='Tipo_Aeronave', how='left')
 
-    # 4. Dim_Detalle_Boleto
+    # 4. Dim_Detalle_Boleto (Este usa llave compuesta, así que revisamos las 3 columnas juntas)
     print(" -> Cargando Dim_Detalle_Boleto...")
-    df_boleto = df_limpio[['cabin_class', 'sales_channel', 'payment_method']].drop_duplicates()
+    df_boleto = df_limpio[['cabin_class', 'sales_channel', 'payment_method']].drop_duplicates(subset=['cabin_class', 'sales_channel', 'payment_method'])
     df_boleto.rename(columns={'cabin_class': 'Clase_Cabina', 'sales_channel': 'Canal_Venta', 'payment_method': 'Metodo_Pago'}, inplace=True)
     df_boleto.to_sql('Dim_Detalle_Boleto', engine, if_exists='append', index=False)
     
-    # Unir por las 3 columnas para garantizar que se trae el ID correcto de esa combinación
     df_boleto_db = pd.read_sql_query("SELECT * FROM Dim_Detalle_Boleto", engine)
     df_limpio = df_limpio.merge(df_boleto_db, left_on=['cabin_class', 'sales_channel', 'payment_method'], right_on=['Clase_Cabina', 'Canal_Venta', 'Metodo_Pago'], how='left')
 
     # 5. Dim_Status
     print(" -> Cargando Dim_Status...")
-    df_status = df_limpio[['status']].drop_duplicates().rename(columns={'status': 'Estado_Vuelo'})
+    df_status = df_limpio[['status']].drop_duplicates(subset=['status']).rename(columns={'status': 'Estado_Vuelo'})
     df_status.to_sql('Dim_Status', engine, if_exists='append', index=False)
     df_status_db = pd.read_sql_query("SELECT ID_Status, Estado_Vuelo FROM Dim_Status", engine)
     df_limpio = df_limpio.merge(df_status_db, left_on='status', right_on='Estado_Vuelo', how='left')
-
     # 6. Dim_Tiempo (Generando el ID_Tiempo como número entero YYYYMMDD)
     print(" -> Cargando Dim_Tiempo...")
     df_tiempo = pd.DataFrame()
