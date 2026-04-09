@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\VouPi\\source\\repos\\SGFood_ETL_Proyecto1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4FE8588B-7B49-B978-5894-429CB7EC5DE0}|SGFood_ETL_Proyecto1\\SGFood_ETL_Proyecto1.dtproj|C:\\Users\\VouPi\\source\\repos\\SGFood_ETL_Proyecto1\\SGFood_ETL_Proyecto1\\Package.dtsx||{CC84AFBD-DA02-46F4-8623-9F07E5569EDB}|Design",
+      "RelativeMoniker": "D:0:0:{4FE8588B-7B49-B978-5894-429CB7EC5DE0}|SGFood_ETL_Proyecto1\\SGFood_ETL_Proyecto1.dtproj|solutionrelative:SGFood_ETL_Proyecto1\\Package.dtsx||{CC84AFBD-DA02-46F4-8623-9F07E5569EDB}|Design"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Package.dtsx [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\VouPi\\source\\repos\\SGFood_ETL_Proyecto1\\SGFood_ETL_Proyecto1\\Package.dtsx",
+              "RelativeDocumentMoniker": "SGFood_ETL_Proyecto1\\Package.dtsx",
+              "ToolTip": "C:\\Users\\VouPi\\source\\repos\\SGFood_ETL_Proyecto1\\SGFood_ETL_Proyecto1\\Package.dtsx [Dise\u00F1o]",
+              "RelativeToolTip": "SGFood_ETL_Proyecto1\\Package.dtsx [Dise\u00F1o]",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFkSURBVDhPjVO/S8NAGH2RtvSPaPeSwUVchS6CexYRJCBYUJC6SEFBBIXiIigKEYRSCC4unQTXDsVipkpbUJHSRTQ2/oimNCTnkOTMXdrqg4Pv\u002B\u002B69ly933wkAoFaqBGPQezdx9/CYO9xZOWU2CPF0aqVKXMcZuY7Kl2R6bomsbZ8sMwYAJvjCKOxtraNW1xTe5N8Gm7sHAIBaXVPC9Vg4KZSaNC7KIs0/jQQW5yUAQPn8gnIwrAM7nYGdzjB5cnIGqwuzDC9AxCDebSPebUdyc8DQWPx1Cx\u002BWQzrG722EtZEOeJgDwOgDukUQSyT5bdagUGrSBU6sW4A7ZNwiHQSHGBa/fANvFuDafZ4eNQgOLSx\u002B/gK06xa6dgpZKY\u002BNswbBlELAz0FRFumXjT7Bq\u002BXFpu31XpRFdJ5M3N73sO9rqMGxehWEI5Ci4puWTqsx\u002BK\u002BNnzAeWSlPxWEDgWGNg//PDLSc8AOMxO8cPcnGpQAAAABJRU5ErkJggg==",
+              "WhenOpened": "2026-04-09T00:41:48.871Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

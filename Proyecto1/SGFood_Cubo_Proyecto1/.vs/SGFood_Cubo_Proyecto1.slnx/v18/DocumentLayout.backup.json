@@ -1,0 +1,81 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\Dim Fecha.dim||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design",
+      "RelativeMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|solutionrelative:SGFood_Cubo_Proyecto1\\Dim Fecha.dim||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\Dim Producto.dim||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design",
+      "RelativeMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|solutionrelative:SGFood_Cubo_Proyecto1\\Dim Producto.dim||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\SG Food DW.cube||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design",
+      "RelativeMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|solutionrelative:SGFood_Cubo_Proyecto1\\SG Food DW.cube||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\SG Food DW.dsv||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design",
+      "RelativeMoniker": "D:0:0:{57AC6F97-932A-BB0E-A0B2-853CE1F5FD30}|SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1.dwproj|solutionrelative:SGFood_Cubo_Proyecto1\\SG Food DW.dsv||{B4191D15-2D32-45F2-906F-E91BBAAA6059}|Design"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Dim Producto.dim [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\Dim Producto.dim",
+              "RelativeDocumentMoniker": "SGFood_Cubo_Proyecto1\\Dim Producto.dim",
+              "ToolTip": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\Dim Producto.dim [Dise\u00F1o]",
+              "RelativeToolTip": "SGFood_Cubo_Proyecto1\\Dim Producto.dim [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T04:31:23.813Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Dim Fecha.dim [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\Dim Fecha.dim",
+              "RelativeDocumentMoniker": "SGFood_Cubo_Proyecto1\\Dim Fecha.dim",
+              "ToolTip": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\Dim Fecha.dim [Dise\u00F1o]",
+              "RelativeToolTip": "SGFood_Cubo_Proyecto1\\Dim Fecha.dim [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T04:23:57.296Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SG Food DW.cube [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\SG Food DW.cube",
+              "RelativeDocumentMoniker": "SGFood_Cubo_Proyecto1\\SG Food DW.cube",
+              "ToolTip": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\SG Food DW.cube [Dise\u00F1o]",
+              "RelativeToolTip": "SGFood_Cubo_Proyecto1\\SG Food DW.cube [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T04:23:32.364Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SG Food DW.dsv [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\SG Food DW.dsv",
+              "RelativeDocumentMoniker": "SGFood_Cubo_Proyecto1\\SG Food DW.dsv",
+              "ToolTip": "C:\\Users\\VouPi\\source\\repos\\SGFood_Cubo_Proyecto1\\SGFood_Cubo_Proyecto1\\SG Food DW.dsv [Dise\u00F1o]",
+              "RelativeToolTip": "SGFood_Cubo_Proyecto1\\SG Food DW.dsv [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T04:22:16.64Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
